@@ -31,7 +31,8 @@ a {
 }
 
 button,
-input {
+input,
+textarea {
   font: inherit;
 }
 
@@ -113,6 +114,11 @@ input {
   background: rgba(255, 255, 255, 0.94);
 }
 
+.input-textarea {
+  min-height: 160px;
+  resize: vertical;
+}
+
 .button {
   border: none;
   border-radius: 999px;
@@ -168,4 +174,23 @@ input {
   padding: 10px 14px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.8);
+}
+
+.card-grid {
+  display: grid;
+  gap: 24px;
+}
+
+.inline-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.helper-text {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
 }

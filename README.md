@@ -38,3 +38,20 @@ npm run dev
 - `/signup` signup page
 - `/login` login page
 - `/dashboard` protected page
+- `/dashboard/jobs/new` protected job posting page
+- `/api/jobs` authenticated job creation endpoint
+
+## Supabase table
+
+Create a `jobs` table with these columns:
+
+```sql
+create table public.jobs (
+  id uuid primary key default gen_random_uuid(),
+  title text not null,
+  description text not null,
+  required_skills text[] not null,
+  created_by uuid not null references auth.users(id) on delete cascade,
+  created_at timestamptz not null default now()
+);
+```

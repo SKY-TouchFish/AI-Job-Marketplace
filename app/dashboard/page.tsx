@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { SignOutButton } from "@/components/auth/sign-out-button";
 import { requireUser } from "@/lib/auth";
 
@@ -24,6 +25,11 @@ export default async function DashboardPage() {
               This page is rendered on the server, and access is enforced in both middleware and
               the server auth helper.
             </p>
+            <div className="pill-links">
+              <Link className="pill" href="/dashboard/jobs/new">
+                Post a job
+              </Link>
+            </div>
           </div>
         </section>
       </div>
