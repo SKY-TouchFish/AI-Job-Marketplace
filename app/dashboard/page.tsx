@@ -52,8 +52,39 @@ export default async function DashboardPage() {
             ) : (
               <div className="jobs-grid">
                 {jobs.map((job) => (
-                  <article className="panel job-card" key={job.id}>
-                    <div className="panel-inner stack">
+                  <article className="panel job-card job-card-clickable" key={job.id}>
+                    {job.created_by === user.id ? (
+                      <Link
+                        aria-label={`Edit ${job.title}`}
+                        className="icon-button job-card-edit"
+                        href={`/dashboard/jobs/${job.id}/edit`}
+                      >
+                        <svg
+                          aria-hidden="true"
+                          fill="none"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          width="18"
+                        >
+                          <path
+                            d="M4 20h4l10-10-4-4L4 16v4Z"
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="1.8"
+                          />
+                          <path
+                            d="m13 7 4 4"
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="1.8"
+                          />
+                        </svg>
+                      </Link>
+                    ) : null}
+
+                    <Link className="job-card-link panel-inner stack" href={`/dashboard/jobs/${job.id}`}>
                       <div className="stack" style={{ gap: 8 }}>
                         <h3 style={{ margin: 0, fontSize: "1.35rem" }}>{job.title}</h3>
                         <p className="helper-text">{job.description}</p>
@@ -66,7 +97,7 @@ export default async function DashboardPage() {
                           </span>
                         ))}
                       </div>
-                    </div>
+                    </Link>
                   </article>
                 ))}
               </div>

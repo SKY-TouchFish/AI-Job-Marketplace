@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { JobRecord } from "@/lib/jobs/queries";
 
 type JobListProps = {
@@ -22,8 +23,8 @@ export function JobList({ jobs }: JobListProps) {
   return (
     <div className="jobs-grid">
       {jobs.map((job) => (
-        <article className="panel job-card" key={job.id}>
-          <div className="panel-inner stack">
+        <article className="panel job-card job-card-clickable" key={job.id}>
+          <Link className="job-card-link panel-inner stack" href={`/dashboard/jobs/${job.id}`}>
             <div className="stack" style={{ gap: 10 }}>
               <p className="eyebrow">Open role</p>
               <h2 style={{ margin: 0, fontSize: "1.6rem" }}>{job.title}</h2>
@@ -37,7 +38,7 @@ export function JobList({ jobs }: JobListProps) {
                 </span>
               ))}
             </div>
-          </div>
+          </Link>
         </article>
       ))}
     </div>
