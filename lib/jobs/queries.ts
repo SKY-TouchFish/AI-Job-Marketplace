@@ -60,7 +60,6 @@ export async function getJobs(filters?: JobMatchFilters) {
 
   const title = normalizeSearchValue(filters?.title);
   const skills = filters?.skills?.map((skill) => skill.trim()).filter(Boolean) || [];
-  const profileSkills = filters?.profileSkills?.map((skill) => skill.trim()).filter(Boolean) || [];
 
   if (title) {
     query = query.ilike("title", `%${title}%`);
