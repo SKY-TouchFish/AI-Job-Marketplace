@@ -38,6 +38,7 @@ npm run dev
 - `/signup` signup page
 - `/login` login page
 - `/dashboard` protected page
+- `/jobs` public job listing page
 - `/dashboard/jobs/new` protected job posting page
 - `/api/jobs` authenticated job creation endpoint
 

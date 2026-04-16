@@ -127,6 +127,12 @@ textarea {
   color: var(--accent-foreground);
   cursor: pointer;
   font-weight: 700;
+  transition:
+    transform 140ms ease,
+    box-shadow 140ms ease,
+    background-color 140ms ease,
+    border-color 140ms ease,
+    color 140ms ease;
 }
 
 .button:disabled {
@@ -134,9 +140,23 @@ textarea {
   opacity: 0.7;
 }
 
+.button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 24px rgba(31, 122, 77, 0.22);
+  background: #17613d;
+}
+
 .subtle-link {
   color: var(--accent);
   font-weight: 700;
+  transition:
+    color 140ms ease,
+    opacity 140ms ease;
+}
+
+.subtle-link:hover {
+  color: #17613d;
+  opacity: 0.9;
 }
 
 .notice {
@@ -174,6 +194,18 @@ textarea {
   padding: 10px 14px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.8);
+  transition:
+    transform 140ms ease,
+    box-shadow 140ms ease,
+    background-color 140ms ease,
+    border-color 140ms ease;
+}
+
+.pill:hover {
+  transform: translateY(-1px);
+  border-color: rgba(31, 122, 77, 0.28);
+  background: rgba(31, 122, 77, 0.12);
+  box-shadow: 0 10px 22px rgba(16, 31, 21, 0.08);
 }
 
 .card-grid {
@@ -193,4 +225,28 @@ textarea {
   color: var(--muted);
   font-size: 0.95rem;
   line-height: 1.6;
+}
+
+.jobs-grid {
+  display: grid;
+  gap: 20px;
+}
+
+.job-card {
+  overflow: hidden;
+}
+
+.skill-list {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.skill-chip {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 8px 12px;
+  background: rgba(31, 122, 77, 0.08);
+  color: var(--foreground);
+  font-size: 0.9rem;
 }

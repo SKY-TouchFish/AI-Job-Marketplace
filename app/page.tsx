@@ -24,6 +24,9 @@ export default async function HomePage() {
               <Link className="pill" href={user ? "/dashboard" : "/login"}>
                 {user ? "Open dashboard" : "Log in"}
               </Link>
+              <Link className="pill" href="/jobs">
+                Browse jobs
+              </Link>
               <Link className="pill" href="/signup">
                 Create account
               </Link>
