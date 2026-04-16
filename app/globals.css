@@ -227,6 +227,17 @@ textarea {
   line-height: 1.6;
 }
 
+.profile-name {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.05;
+}
+
+.profile-meta {
+  display: grid;
+  gap: 10px;
+}
+
 .jobs-grid {
   display: grid;
   gap: 20px;

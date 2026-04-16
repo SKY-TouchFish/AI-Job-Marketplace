@@ -38,6 +38,7 @@ npm run dev
 - `/signup` signup page
 - `/login` login page
 - `/dashboard` protected page
+- `/profile` protected profile page
 - `/jobs` public job listing page
 - `/dashboard/jobs/new` protected job posting page
 - `/api/jobs` authenticated job creation endpoint
@@ -54,5 +55,15 @@ create table public.jobs (
   required_skills text[] not null,
   created_by uuid not null references auth.users(id) on delete cascade,
   created_at timestamptz not null default now()
+);
+```
+
+Create a `profiles` table with these columns:
+
+```sql
+create table public.profiles (
+  id uuid primary key references auth.users(id) on delete cascade,
+  display_name text not null,
+  skills text[] not null default '{}'
 );
 ```

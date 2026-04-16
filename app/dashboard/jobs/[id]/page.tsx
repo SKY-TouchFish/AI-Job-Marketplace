@@ -47,14 +47,14 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
               </section>
 
               <div className="inline-actions">
-                <Link className="pill" href="/dashboard">
-                  Back to dashboard
-                </Link>
                 {isCreator ? (
                   <Link className="button" href={`/dashboard/jobs/${job.id}/edit`}>
                     Edit job
                   </Link>
                 ) : null}
+                <Link className="pill" href="/dashboard">
+                  Back to dashboard
+                </Link>
               </div>
             </div>
           </section>
