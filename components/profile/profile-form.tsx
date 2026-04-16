@@ -60,12 +60,7 @@ export function ProfileForm({ email, initialValues }: ProfileFormProps) {
     <section className="panel">
       <div className="panel-inner stack">
         <div className="stack" style={{ gap: 8 }}>
-          <p className="eyebrow">Your profile</p>
           <h1 style={{ margin: 0, fontSize: "2.2rem" }}>Profile settings</h1>
-          <p className="helper-text">
-            Keep your display name and skills up to date so the marketplace can show a better
-            profile.
-          </p>
         </div>
 
         <form action={handleSubmit} className="stack">

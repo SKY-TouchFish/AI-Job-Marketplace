@@ -71,12 +71,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
         <section className="panel">
           <div className="panel-inner stack">
             <div className="stack" style={{ gap: 8 }}>
-              <p className="eyebrow">Job matching</p>
               <h2 style={{ margin: 0, fontSize: "1.8rem" }}>Find matching roles</h2>
-              <p className="helper-text">
-                Search runs only on the server. Filter by title and skills, while match scores are
-                calculated from your saved profile skills against each job&apos;s required skills.
-              </p>
             </div>
 
             <JobMatchForm defaultTitle={title} defaultSkills={skills} />

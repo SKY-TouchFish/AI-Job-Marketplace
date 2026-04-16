@@ -105,16 +105,11 @@ export function JobForm({ mode, jobId, initialValues }: JobFormProps) {
   return (
     <section className="panel">
       <div className="panel-inner stack">
-        <div className="stack" style={{ gap: 8 }}>
-          <p className="eyebrow">Employer tools</p>
+        {/* <div className="stack" style={{ gap: 8 }}>
           <h1 style={{ margin: 0, fontSize: "2.2rem" }}>
             {mode === "create" ? "Post a new job" : "Edit job"}
           </h1>
-          <p className="helper-text">
-            Enter the basics and we&apos;ll store the listing in Supabase. Required skills should
-            be comma-separated, for example `React, TypeScript, Supabase`.
-          </p>
-        </div>
+        </div> */}
 
         <form action={handleSubmit} className="stack">
           <label className="field">

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { DeleteJobButton } from "@/components/jobs/delete-job-button";
 import { requireUser } from "@/lib/auth";
+import { formatJobDate } from "@/lib/jobs/format";
 import { getJobById } from "@/lib/jobs/queries";
 
 type JobDetailPageProps = {
@@ -21,14 +22,27 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
     return (
       <main className="shell">
         <div className="container card-grid">
+          <div className="topbar">
+            <div>
+              <p className="eyebrow">AI Job Marketplace</p>
+              <h1 style={{ margin: "8px 0 0", fontSize: "2.4rem" }}>Job Details</h1>
+            </div>
+          </div>
+
           <section className="panel">
             <div className="panel-inner stack">
               <div className="stack" style={{ gap: 8 }}>
-                <p className="eyebrow">Job details</p>
+                {/* <p className="eyebrow">Job details</p> */}
                 <h1 style={{ margin: 0, fontSize: "2.2rem" }}>{job.title}</h1>
-                <p className="helper-text">
+                <p className="job-meta">{formatJobDate(job.created_at)}</p>
+                {/* <p className="job-meta">
+                  {[job.creator_display_name, job.creator_email, formatJobDate(job.created_at)]
+                    .filter(Boolean)
+                    .join(" • ")}
+                </p> */}
+                {/* <p className="helper-text">
                   Full job details in the same minimal layout as the posting flow.
-                </p>
+                </p> */}
               </div>
 
               <section className="detail-block stack">

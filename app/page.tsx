@@ -9,12 +9,8 @@ export default async function HomePage() {
       <div className="container hero">
         <section className="panel">
           <div className="panel-inner">
-            <p className="eyebrow">AI Job Marketplace</p>
-            <h1 className="title">Simple Supabase auth, ready for your App Router MVP.</h1>
-            <p className="lead">
-              This starter gives you email and password signup, login, session-aware middleware,
-              and a protected dashboard route you can build on.
-            </p>
+            <h1 className="title">Find work and hire faster.</h1>
+            <p className="lead">A simple AI job marketplace for posting roles and discovering matches.</p>
           </div>
         </section>
 
@@ -31,10 +27,6 @@ export default async function HomePage() {
                 Create account
               </Link>
             </div>
-            <p className="lead">
-              Auth state is stored with Supabase cookies and refreshed in middleware so protected
-              routes stay in sync on server and client renders.
-            </p>
           </div>
         </section>
       </div>

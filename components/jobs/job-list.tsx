@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { formatJobDate } from "@/lib/jobs/format";
 import { MatchScoreGauge } from "@/components/jobs/match-score-gauge";
 import type { JobRecord } from "@/lib/jobs/queries";
 
@@ -56,6 +57,7 @@ export function JobList({ jobs, currentUserId }: JobListProps) {
               <div className="stack" style={{ gap: 10 }}>
                 <p className="eyebrow">Open role</p>
                 <h2 style={{ margin: 0, fontSize: "1.6rem" }}>{job.title}</h2>
+                <p className="job-meta">{formatJobDate(job.created_at)}</p>
                 <p className="helper-text preserve-lines">{job.description}</p>
               </div>
             </div>
