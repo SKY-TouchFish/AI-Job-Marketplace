@@ -1,5 +1,6 @@
 "use client";
 
+import { DeleteJobButton } from "@/components/jobs/delete-job-button";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
@@ -128,6 +129,7 @@ export function JobForm({ mode, jobId, initialValues }: JobFormProps) {
             <Link className="pill" href={mode === "edit" && jobId ? `/dashboard/jobs/${jobId}` : "/dashboard"}>
               {mode === "edit" ? "Back to job" : "Back to dashboard"}
             </Link>
+            {mode === "edit" && jobId ? <DeleteJobButton inline jobId={jobId} /> : null}
           </div>
         </form>
       </div>

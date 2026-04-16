@@ -146,6 +146,16 @@ textarea {
   background: #17613d;
 }
 
+.button-danger {
+  background: #b42318;
+  color: #fff9f8;
+}
+
+.button-danger:hover:not(:disabled) {
+  background: #8f1b1b;
+  box-shadow: 0 12px 24px rgba(180, 35, 24, 0.22);
+}
+
 .subtle-link {
   color: var(--accent);
   font-weight: 700;
@@ -220,11 +230,27 @@ textarea {
   flex-wrap: wrap;
 }
 
+.delete-job-stack {
+  display: grid;
+  gap: 12px;
+  justify-items: end;
+}
+
+.delete-job-inline {
+  display: grid;
+  gap: 8px;
+  margin-left: auto;
+}
+
 .helper-text {
   margin: 0;
   color: var(--muted);
   font-size: 0.95rem;
   line-height: 1.6;
+}
+
+.preserve-lines {
+  white-space: pre-line;
 }
 
 .profile-name {
@@ -276,20 +302,27 @@ textarea {
 .job-card-link {
   display: grid;
   color: inherit;
+  position: relative;
+  min-height: 220px;
+  padding-right: 220px;
 }
 
 .job-card-header {
   display: grid;
   gap: 20px;
   align-items: start;
-  grid-template-columns: minmax(0, 1fr) 180px;
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .job-card-score {
+  position: absolute;
+  top: 50%;
+  right: 28px;
+  transform: translateY(-50%);
   display: grid;
   gap: 8px;
   justify-items: center;
-  align-self: center;
+  width: 160px;
 }
 
 .job-card-score-label {
@@ -367,11 +400,14 @@ textarea {
 }
 
 @media (max-width: 720px) {
-  .job-card-header {
-    grid-template-columns: 1fr;
+  .job-card-link {
+    min-height: auto;
+    padding-right: 28px;
   }
 
   .job-card-score {
+    position: static;
+    transform: none;
     justify-items: center;
   }
 }

@@ -60,3 +60,37 @@ export async function PUT(request: Request, context: RouteContext) {
 
   return NextResponse.json({ message: "Job updated successfully." });
 }
+
+export async function DELETE(_request: Request, context: RouteContext) {
+  const { id } = await context.params;
+  const supabase = await createClient();
+  const {
+    data: { user }
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+  }
+
+  const { data: job, error: jobError } = await supabase
+    .from("jobs")
+    .select("id, created_by")
+    .eq("id", id)
+    .single();
+
+  if (jobError || !job) {
+    return NextResponse.json({ error: "Job not found." }, { status: 404 });
+  }
+
+  if (job.created_by !== user.id) {
+    return NextResponse.json({ error: "Forbidden." }, { status: 403 });
+  }
+
+  const { error } = await supabase.from("jobs").delete().eq("id", id);
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  return NextResponse.json({ message: "Job deleted successfully." });
+}

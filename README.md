@@ -58,6 +58,36 @@ create table public.jobs (
 );
 ```
 
+Enable Row Level Security and add policies so only the creator can edit or delete their own jobs:
+
+```sql
+alter table public.jobs enable row level security;
+
+create policy "jobs are viewable by everyone"
+on public.jobs
+for select
+using (true);
+
+create policy "authenticated users can create jobs"
+on public.jobs
+for insert
+to authenticated
+with check (auth.uid() = created_by);
+
+create policy "creators can update their own jobs"
+on public.jobs
+for update
+to authenticated
+using (auth.uid() = created_by)
+with check (auth.uid() = created_by);
+
+create policy "creators can delete their own jobs"
+on public.jobs
+for delete
+to authenticated
+using (auth.uid() = created_by);
+```
+
 Create a `profiles` table with these columns:
 
 ```sql
@@ -66,4 +96,29 @@ create table public.profiles (
   display_name text not null,
   skills text[] not null default '{}'
 );
+```
+
+Enable Row Level Security for profiles too:
+
+```sql
+alter table public.profiles enable row level security;
+
+create policy "users can read their own profile"
+on public.profiles
+for select
+to authenticated
+using (auth.uid() = id);
+
+create policy "users can insert their own profile"
+on public.profiles
+for insert
+to authenticated
+with check (auth.uid() = id);
+
+create policy "users can update their own profile"
+on public.profiles
+for update
+to authenticated
+using (auth.uid() = id)
+with check (auth.uid() = id);
 ```

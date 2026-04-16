@@ -56,13 +56,13 @@ export function JobList({ jobs, currentUserId }: JobListProps) {
               <div className="stack" style={{ gap: 10 }}>
                 <p className="eyebrow">Open role</p>
                 <h2 style={{ margin: 0, fontSize: "1.6rem" }}>{job.title}</h2>
-                <p className="helper-text">{job.description}</p>
+                <p className="helper-text preserve-lines">{job.description}</p>
               </div>
+            </div>
 
-              <div className="job-card-score">
-                <p className="job-card-score-label">Match Score</p>
-                <MatchScoreGauge value={job.match_score} />
-              </div>
+            <div className="job-card-score">
+              <p className="job-card-score-label">Match Score</p>
+              <MatchScoreGauge value={job.match_score} />
             </div>
 
             <div className="skill-list">

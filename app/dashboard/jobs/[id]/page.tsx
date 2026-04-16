@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { DeleteJobButton } from "@/components/jobs/delete-job-button";
 import { requireUser } from "@/lib/auth";
 import { getJobById } from "@/lib/jobs/queries";
 
@@ -32,7 +33,7 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
 
               <section className="detail-block stack">
                 <h2 className="section-title">Description</h2>
-                <p className="helper-text">{job.description}</p>
+                <p className="helper-text preserve-lines">{job.description}</p>
               </section>
 
               <section className="detail-block stack">
@@ -55,6 +56,7 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
                 <Link className="pill" href="/dashboard">
                   Back to dashboard
                 </Link>
+                {isCreator ? <DeleteJobButton inline jobId={job.id} /> : null}
               </div>
             </div>
           </section>
