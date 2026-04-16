@@ -3,9 +3,10 @@ import type { JobRecord } from "@/lib/jobs/queries";
 
 type JobListProps = {
   jobs: JobRecord[];
+  currentUserId?: string;
 };
 
-export function JobList({ jobs }: JobListProps) {
+export function JobList({ jobs, currentUserId }: JobListProps) {
   if (jobs.length === 0) {
     return (
       <section className="panel">
@@ -24,6 +25,31 @@ export function JobList({ jobs }: JobListProps) {
     <div className="jobs-grid">
       {jobs.map((job) => (
         <article className="panel job-card job-card-clickable" key={job.id}>
+          {job.created_by === currentUserId ? (
+            <Link
+              aria-label={`Edit ${job.title}`}
+              className="icon-button job-card-edit"
+              href={`/dashboard/jobs/${job.id}/edit`}
+            >
+              <svg aria-hidden="true" fill="none" height="18" viewBox="0 0 24 24" width="18">
+                <path
+                  d="M4 20h4l10-10-4-4L4 16v4Z"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="1.8"
+                />
+                <path
+                  d="m13 7 4 4"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="1.8"
+                />
+              </svg>
+            </Link>
+          ) : null}
+
           <Link className="job-card-link panel-inner stack" href={`/dashboard/jobs/${job.id}`}>
             <div className="stack" style={{ gap: 10 }}>
               <p className="eyebrow">Open role</p>

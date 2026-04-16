@@ -232,6 +232,18 @@ textarea {
   gap: 20px;
 }
 
+.match-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.results-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .job-card {
   position: relative;
   overflow: hidden;

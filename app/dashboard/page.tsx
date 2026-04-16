@@ -1,11 +1,27 @@
 import Link from "next/link";
 import { SignOutButton } from "@/components/auth/sign-out-button";
+import { JobList } from "@/components/jobs/job-list";
+import { JobMatchForm } from "@/components/jobs/job-match-form";
 import { requireUser } from "@/lib/auth";
-import { getJobs } from "@/lib/jobs/queries";
+import { getJobs, parseSkillSearch } from "@/lib/jobs/queries";
 
-export default async function DashboardPage() {
+type DashboardPageProps = {
+  searchParams?: Promise<{
+    title?: string;
+    skills?: string;
+  }>;
+};
+
+export default async function DashboardPage({ searchParams }: DashboardPageProps) {
   const user = await requireUser();
-  const jobs = await getJobs();
+  const resolvedSearchParams = searchParams ? await searchParams : undefined;
+  const title = resolvedSearchParams?.title || "";
+  const skills = resolvedSearchParams?.skills || "";
+  const jobs = await getJobs({
+    title,
+    skills: parseSkillSearch(skills)
+  });
+  const hasFilters = Boolean(title.trim() || skills.trim());
 
   return (
     <main className="shell">
@@ -38,69 +54,35 @@ export default async function DashboardPage() {
         <section className="panel">
           <div className="panel-inner stack">
             <div className="stack" style={{ gap: 8 }}>
-              <p className="eyebrow">Job listings</p>
-              <h2 style={{ margin: 0, fontSize: "1.8rem" }}>Open roles</h2>
+              <p className="eyebrow">Job matching</p>
+              <h2 style={{ margin: 0, fontSize: "1.8rem" }}>Find matching roles</h2>
               <p className="helper-text">
-                Jobs are loaded from Supabase and shown here in a simple card list.
+                Search runs only on the server. Enter a job title and skills, then the dashboard
+                renders matching jobs from Supabase.
               </p>
             </div>
 
-            {jobs.length === 0 ? (
+            <JobMatchForm defaultTitle={title} defaultSkills={skills} />
+
+            <div className="results-meta">
+              <p className="helper-text">
+                {hasFilters
+                  ? `Found ${jobs.length} matching ${jobs.length === 1 ? "job" : "jobs"}.`
+                  : `Showing ${jobs.length} available ${jobs.length === 1 ? "job" : "jobs"}.`}
+              </p>
+            </div>
+
+            {jobs.length === 0 && hasFilters ? (
+              <p className="helper-text">
+                No jobs matched this title and skills combination. Try fewer skills or a broader
+                title.
+              </p>
+            ) : jobs.length === 0 ? (
               <p className="helper-text">
                 No jobs posted yet. Create the first one from the employer tools above.
               </p>
             ) : (
-              <div className="jobs-grid">
-                {jobs.map((job) => (
-                  <article className="panel job-card job-card-clickable" key={job.id}>
-                    {job.created_by === user.id ? (
-                      <Link
-                        aria-label={`Edit ${job.title}`}
-                        className="icon-button job-card-edit"
-                        href={`/dashboard/jobs/${job.id}/edit`}
-                      >
-                        <svg
-                          aria-hidden="true"
-                          fill="none"
-                          height="18"
-                          viewBox="0 0 24 24"
-                          width="18"
-                        >
-                          <path
-                            d="M4 20h4l10-10-4-4L4 16v4Z"
-                            stroke="currentColor"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="1.8"
-                          />
-                          <path
-                            d="m13 7 4 4"
-                            stroke="currentColor"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="1.8"
-                          />
-                        </svg>
-                      </Link>
-                    ) : null}
-
-                    <Link className="job-card-link panel-inner stack" href={`/dashboard/jobs/${job.id}`}>
-                      <div className="stack" style={{ gap: 8 }}>
-                        <h3 style={{ margin: 0, fontSize: "1.35rem" }}>{job.title}</h3>
-                        <p className="helper-text">{job.description}</p>
-                      </div>
-
-                      <div className="skill-list">
-                        {job.required_skills.map((skill) => (
-                          <span className="skill-chip" key={`${job.id}-${skill}`}>
-                            {skill}
-                          </span>
-                        ))}
-                      </div>
-                    </Link>
-                  </article>
-                ))}
-              </div>
+              <JobList jobs={jobs} currentUserId={user.id} />
             )}
           </div>
         </section>
