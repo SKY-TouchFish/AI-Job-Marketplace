@@ -3,7 +3,10 @@ type JobMatchFormProps = {
   defaultSkills?: string;
 };
 
-export function JobMatchForm({ defaultTitle = "", defaultSkills = "" }: JobMatchFormProps) {
+export function JobMatchForm({
+  defaultTitle = "",
+  defaultSkills = ""
+}: JobMatchFormProps) {
   return (
     <form action="/dashboard" className="stack">
       <div className="match-grid">

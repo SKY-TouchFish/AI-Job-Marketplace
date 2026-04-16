@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { MatchScoreGauge } from "@/components/jobs/match-score-gauge";
 import type { JobRecord } from "@/lib/jobs/queries";
 
 type JobListProps = {
@@ -51,10 +52,17 @@ export function JobList({ jobs, currentUserId }: JobListProps) {
           ) : null}
 
           <Link className="job-card-link panel-inner stack" href={`/dashboard/jobs/${job.id}`}>
-            <div className="stack" style={{ gap: 10 }}>
-              <p className="eyebrow">Open role</p>
-              <h2 style={{ margin: 0, fontSize: "1.6rem" }}>{job.title}</h2>
-              <p className="helper-text">{job.description}</p>
+            <div className="job-card-header">
+              <div className="stack" style={{ gap: 10 }}>
+                <p className="eyebrow">Open role</p>
+                <h2 style={{ margin: 0, fontSize: "1.6rem" }}>{job.title}</h2>
+                <p className="helper-text">{job.description}</p>
+              </div>
+
+              <div className="job-card-score">
+                <p className="job-card-score-label">Match Score</p>
+                <MatchScoreGauge value={job.match_score} />
+              </div>
             </div>
 
             <div className="skill-list">

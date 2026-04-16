@@ -7,15 +7,21 @@ export type JobRecord = {
   required_skills: string[];
   created_at: string;
   created_by: string;
+  match_score: number;
 };
 
 export type JobMatchFilters = {
   title?: string;
   skills?: string[];
+  profileSkills?: string[];
 };
 
 function normalizeSearchValue(value?: string) {
   return value?.trim() || "";
+}
+
+function normalizeSkill(value: string) {
+  return value.trim().toLowerCase();
 }
 
 export function parseSkillSearch(value?: string) {
@@ -23,6 +29,26 @@ export function parseSkillSearch(value?: string) {
     .split(",")
     .map((skill) => skill.trim())
     .filter(Boolean);
+}
+
+function computeMatchScore(
+  job: Omit<JobRecord, "match_score">,
+  filters?: JobMatchFilters
+) {
+  const profileSkills = filters?.profileSkills?.map(normalizeSkill).filter(Boolean) || [];
+
+  if (profileSkills.length === 0) {
+    return 0;
+  }
+
+  const normalizedJobSkills = job.required_skills.map(normalizeSkill);
+  const matchedSkills = normalizedJobSkills.filter((skill) => profileSkills.includes(skill)).length;
+
+  if (normalizedJobSkills.length === 0) {
+    return 0;
+  }
+
+  return Math.round((matchedSkills / normalizedJobSkills.length) * 100);
 }
 
 export async function getJobs(filters?: JobMatchFilters) {
@@ -34,6 +60,7 @@ export async function getJobs(filters?: JobMatchFilters) {
 
   const title = normalizeSearchValue(filters?.title);
   const skills = filters?.skills?.map((skill) => skill.trim()).filter(Boolean) || [];
+  const profileSkills = filters?.profileSkills?.map((skill) => skill.trim()).filter(Boolean) || [];
 
   if (title) {
     query = query.ilike("title", `%${title}%`);
@@ -49,7 +76,10 @@ export async function getJobs(filters?: JobMatchFilters) {
     throw new Error(error.message);
   }
 
-  return (data || []) as JobRecord[];
+  return ((data || []) as Omit<JobRecord, "match_score">[]).map((job) => ({
+    ...job,
+    match_score: computeMatchScore(job, filters)
+  }));
 }
 
 export async function getJobById(jobId: string) {
@@ -64,5 +94,8 @@ export async function getJobById(jobId: string) {
     throw new Error(error.message);
   }
 
-  return data as JobRecord;
+  return {
+    ...(data as Omit<JobRecord, "match_score">),
+    match_score: 0
+  };
 }

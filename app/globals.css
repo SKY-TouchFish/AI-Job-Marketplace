@@ -278,6 +278,33 @@ textarea {
   color: inherit;
 }
 
+.job-card-header {
+  display: grid;
+  gap: 20px;
+  align-items: start;
+  grid-template-columns: minmax(0, 1fr) 180px;
+}
+
+.job-card-score {
+  display: grid;
+  gap: 8px;
+  justify-items: center;
+  align-self: center;
+}
+
+.job-card-score-label {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.match-gauge {
+  width: 160px;
+  height: 110px;
+}
+
 .icon-button {
   display: inline-flex;
   align-items: center;
@@ -337,4 +364,14 @@ textarea {
   background: rgba(31, 122, 77, 0.08);
   color: var(--foreground);
   font-size: 0.9rem;
+}
+
+@media (max-width: 720px) {
+  .job-card-header {
+    grid-template-columns: 1fr;
+  }
+
+  .job-card-score {
+    justify-items: center;
+  }
 }

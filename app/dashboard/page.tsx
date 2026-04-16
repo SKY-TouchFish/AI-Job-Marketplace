@@ -21,7 +21,8 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
   const skills = resolvedSearchParams?.skills || "";
   const jobs = await getJobs({
     title,
-    skills: parseSkillSearch(skills)
+    skills: parseSkillSearch(skills),
+    profileSkills: profile.skills
   });
   const hasFilters = Boolean(title.trim() || skills.trim());
   const displayName = profile.display_name.trim() || user.email || "User";
@@ -73,8 +74,8 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
               <p className="eyebrow">Job matching</p>
               <h2 style={{ margin: 0, fontSize: "1.8rem" }}>Find matching roles</h2>
               <p className="helper-text">
-                Search runs only on the server. Enter a job title and skills, then the dashboard
-                renders matching jobs from Supabase.
+                Search runs only on the server. Filter by title and skills, while match scores are
+                calculated from your saved profile skills against each job&apos;s required skills.
               </p>
             </div>
 
