@@ -1,6 +1,7 @@
 "use client";
 
 import { DeleteJobButton } from "@/components/jobs/delete-job-button";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
@@ -19,14 +20,20 @@ type JobFormProps = {
 export function JobForm({ mode, jobId, initialValues }: JobFormProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const [isGeneratingSkills, startGeneratingSkills] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const [title, setTitle] = useState(initialValues?.title || "");
+  const [description, setDescription] = useState(initialValues?.description || "");
+  const [requiredSkills, setRequiredSkills] = useState(
+    initialValues?.requiredSkills.join(", ") || ""
+  );
 
-  function handleSubmit(formData: FormData) {
+  function handleSubmit() {
     const payload = {
-      title: String(formData.get("title") || ""),
-      description: String(formData.get("description") || ""),
-      requiredSkills: String(formData.get("requiredSkills") || "")
+      title,
+      description,
+      requiredSkills
     };
 
     const validation = validateCreateJobInput(payload);
@@ -65,6 +72,36 @@ export function JobForm({ mode, jobId, initialValues }: JobFormProps) {
     });
   }
 
+  function handleGenerateSkills() {
+    setError(null);
+    setMessage(null);
+
+    if (!description.trim()) {
+      setError("Add a job description before generating skills.");
+      return;
+    }
+
+    startGeneratingSkills(async () => {
+      const response = await fetch("/api/ai/generate-skills", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ description })
+      });
+
+      const result = (await response.json()) as { error?: string; skills?: string[] };
+
+      if (!response.ok || !result.skills) {
+        setError(result.error || "Unable to generate skills.");
+        return;
+      }
+
+      setRequiredSkills(result.skills.join(", "));
+      setMessage("Skills generated with AI.");
+    });
+  }
+
   return (
     <section className="panel">
       <div className="panel-inner stack">
@@ -87,7 +124,8 @@ export function JobForm({ mode, jobId, initialValues }: JobFormProps) {
               type="text"
               name="title"
               required
-              defaultValue={initialValues?.title || ""}
+              value={title}
+              onChange={(event) => setTitle(event.target.value)}
             />
           </label>
 
@@ -97,19 +135,34 @@ export function JobForm({ mode, jobId, initialValues }: JobFormProps) {
               className="input input-textarea"
               name="description"
               required
-              defaultValue={initialValues?.description || ""}
+              value={description}
+              onChange={(event) => setDescription(event.target.value)}
             />
           </label>
 
           <label className="field">
             <span className="label">Required skills</span>
+            <div className="field-toolbar">
+              <button
+                className="pill ai-button"
+                type="button"
+                onClick={handleGenerateSkills}
+                disabled={isGeneratingSkills}
+              >
+                <span className="ai-button-icon" aria-hidden="true">
+                  <Image alt="" height={16} src="/openai.svg" width={16} />
+                </span>
+                {isGeneratingSkills ? "Generating..." : "Generate Skills with AI"}
+              </button>
+            </div>
             <input
               className="input"
               type="text"
               name="requiredSkills"
               required
               placeholder="React, TypeScript, Supabase"
-              defaultValue={initialValues?.requiredSkills.join(", ") || ""}
+              value={requiredSkills}
+              onChange={(event) => setRequiredSkills(event.target.value)}
             />
           </label>
 

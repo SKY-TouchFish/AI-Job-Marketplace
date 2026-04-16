@@ -52,7 +52,8 @@ export async function PUT(request: Request, context: RouteContext) {
       description: validation.data.description,
       required_skills: validation.data.requiredSkills
     })
-    .eq("id", id);
+    .eq("id", id)
+    .eq("created_by", user.id);
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -86,7 +87,11 @@ export async function DELETE(_request: Request, context: RouteContext) {
     return NextResponse.json({ error: "Forbidden." }, { status: 403 });
   }
 
-  const { error } = await supabase.from("jobs").delete().eq("id", id);
+  const { error } = await supabase
+    .from("jobs")
+    .delete()
+    .eq("id", id)
+    .eq("created_by", user.id);
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

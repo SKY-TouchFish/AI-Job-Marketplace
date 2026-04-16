@@ -19,6 +19,7 @@ npm install
 ```
 
 2. Copy `.env.example` to `.env.local` and add your Supabase project values.
+   Add `OPENAI_API_KEY` too if you want AI skill generation on the job form.
 
 3. In Supabase Auth settings, make sure your site URL matches your local app, for example:
 
