@@ -135,8 +135,10 @@ export function JobForm({ mode, jobId, initialValues }: JobFormProps) {
             />
           </label>
 
-          <label className="field">
-            <span className="label">Required skills</span>
+          <div className="field">
+            <label className="label" htmlFor="requiredSkills">
+              Required skills
+            </label>
             <div className="field-toolbar">
               <button
                 className="pill ai-button"
@@ -151,6 +153,7 @@ export function JobForm({ mode, jobId, initialValues }: JobFormProps) {
               </button>
             </div>
             <input
+              id="requiredSkills"
               className="input"
               type="text"
               name="requiredSkills"
@@ -159,7 +162,7 @@ export function JobForm({ mode, jobId, initialValues }: JobFormProps) {
               value={requiredSkills}
               onChange={(event) => setRequiredSkills(event.target.value)}
             />
-          </label>
+          </div>
 
           {error ? <div className="notice notice-error">{error}</div> : null}
           {message ? <div className="notice notice-success">{message}</div> : null}
