@@ -50,6 +50,16 @@ export function AuthForm({ mode }: AuthFormProps) {
         return;
       }
 
+      if (
+        mode === "signup" &&
+        result.data.user &&
+        Array.isArray(result.data.user.identities) &&
+        result.data.user.identities.length === 0
+      ) {
+        setError("An account with this email already exists. Please log in instead.");
+        return;
+      }
+
       if (mode === "signup" && !result.data.session) {
         setMessage("Account created. Check your email to confirm the signup.");
         router.refresh();
