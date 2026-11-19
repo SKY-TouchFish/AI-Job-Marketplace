@@ -20,6 +20,8 @@ export function parseSkills(value?: string) {
     .filter(Boolean);
 }
 
+// 要求填写显示名称，技能可以留空，也可以用文本或数组提供。
+// Require a display name and accept optional skills as text or an array.
 export function validateProfileInput(input: {
   displayName?: string;
   skills?: string | string[];

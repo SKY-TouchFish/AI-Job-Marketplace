@@ -23,6 +23,8 @@ export async function PUT(request: Request) {
     return NextResponse.json({ error: validation.error }, { status: 400 });
   }
 
+  // 用当前用户的 ID 保存资料，首次保存与后续更新共用此写入操作。
+  // Save the profile under the current user's ID, using the same operation for first-time and later saves.
   const { error } = await supabase.from("profiles").upsert({
     id: user.id,
     display_name: validation.data.displayName,

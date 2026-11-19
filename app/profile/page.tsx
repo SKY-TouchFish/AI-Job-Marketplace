@@ -4,6 +4,8 @@ import { getProfileByUserId } from "@/lib/profile/queries";
 
 export default async function ProfilePage() {
   const user = await requireUser();
+  // 从资料表预填显示名称和技能，邮箱则取自认证账户。
+  // Prefill the display name and skills from the profile, and take the email from the auth account.
   const profile = await getProfileByUserId(user.id);
 
   return (

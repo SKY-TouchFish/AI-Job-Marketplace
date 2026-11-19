@@ -18,6 +18,8 @@ export function DeleteJobButton({
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
+  // 先确认永久删除，接口成功后再跳转。
+  // Confirm the permanent deletion and navigate only after the API succeeds.
   function handleDelete() {
     const confirmed = window.confirm("Delete this job permanently?");
 

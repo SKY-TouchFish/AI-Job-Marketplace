@@ -17,6 +17,8 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
 
   try {
     const job = await getJobById(id);
+    // 依据发布者身份决定是否显示编辑和删除入口。
+    // Use ownership to decide whether to show edit and delete controls.
     const isCreator = job.created_by === user.id;
 
     return (

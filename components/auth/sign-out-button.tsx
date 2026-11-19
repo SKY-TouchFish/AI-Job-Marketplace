@@ -13,6 +13,8 @@ export function SignOutButton() {
       const supabase = createClient();
       await supabase.auth.signOut();
       router.replace("/login");
+      // 刷新服务端渲染的数据，使其反映退出登录后的会话状态。
+      // Refresh server-rendered data so it reflects the signed-out session.
       router.refresh();
     });
   }

@@ -21,6 +21,8 @@ function normalizeSkills(value: string) {
     .filter(Boolean);
 }
 
+// 统一处理逗号分隔的文本和技能数组，并检查发布职位所需字段。
+// Normalize comma-separated text or an array of skills and check the fields required for a job posting.
 export function validateCreateJobInput(input: {
   title?: string;
   description?: string;

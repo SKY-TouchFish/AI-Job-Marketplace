@@ -17,6 +17,8 @@ export function AuthForm({ mode }: AuthFormProps) {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  // 读取登录后的返回地址，默认进入控制面板。
+  // Read the post-login destination, defaulting to the dashboard.
   const redirectTo = useMemo(
     () => searchParams.get("redirectTo") || "/dashboard",
     [searchParams]
@@ -50,6 +52,8 @@ export function AuthForm({ mode }: AuthFormProps) {
         return;
       }
 
+      // 将注册响应中的空身份列表视为邮箱已注册。
+      // Treat an empty identities array in the sign-up response as an existing account.
       if (
         mode === "signup" &&
         result.data.user &&
@@ -60,6 +64,8 @@ export function AuthForm({ mode }: AuthFormProps) {
         return;
       }
 
+      // 注册成功但尚未建立会话时，提示用户通过邮件确认。
+      // Prompt for email confirmation when sign-up succeeds without creating a session.
       if (mode === "signup" && !result.data.session) {
         setMessage("Account created. Check your email to confirm the signup.");
         router.refresh();

@@ -6,6 +6,8 @@ type MatchScoreGaugeProps = {
   value: number;
 };
 
+// 将查询层计算的匹配分数按 0 到 100 的刻度显示。
+// Display the match score calculated by the query layer on a 0 to 100 scale.
 export function MatchScoreGauge({ value }: MatchScoreGaugeProps) {
   return (
     <div className="match-gauge">

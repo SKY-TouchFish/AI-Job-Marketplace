@@ -52,6 +52,8 @@ function normalizeSkill(value: string) {
 //   };
 // }
 
+// 将 URL 中逗号分隔的技能搜索词拆成数组。
+// Split the comma-separated skills in the search URL into an array.
 export function parseSkillSearch(value?: string) {
   return (value || "")
     .split(",")
@@ -59,6 +61,8 @@ export function parseSkillSearch(value?: string) {
     .filter(Boolean);
 }
 
+// 按职位所需技能计算覆盖率，技能比较忽略大小写及首尾空白。
+// Score coverage of the job's required skills, ignoring case and surrounding whitespace.
 function computeMatchScore(
   job: Omit<JobRecord, "match_score">,
   // job: Omit<JobRecord, "match_score" | "creator_display_name" | "creator_email">,
@@ -95,6 +99,8 @@ export async function getJobs(filters?: JobMatchFilters) {
     query = query.ilike("title", `%${title}%`);
   }
 
+  // 只要任一搜索技能与职位所需技能重叠，就保留该职位。
+  // Keep a job when at least one search skill overlaps its required skills.
   if (skills.length > 0) {
     query = query.overlaps("required_skills", skills);
   }
@@ -105,6 +111,8 @@ export async function getJobs(filters?: JobMatchFilters) {
     throw new Error(error.message);
   }
 
+  // 对筛选结果逐条计算匹配分数，沿用数据库返回的发布时间顺序。
+  // Score each filtered listing while preserving the database's newest-first order.
   return ((data || []) as Omit<JobRecord, "match_score">[]).map((job) => ({
     ...job,
     match_score: computeMatchScore(job, filters)
@@ -130,6 +138,8 @@ export async function getJobById(jobId: string) {
   //   data: { user }
   // } = await supabase.auth.getUser();
 
+  // 单条详情查询没有用户技能输入，使用默认匹配分数。
+  // Use the default match score because the detail lookup receives no profile skills.
   return {
     ...(data as Omit<JobRecord, "match_score">),
     match_score: 0

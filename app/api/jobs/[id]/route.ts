@@ -8,6 +8,8 @@ type RouteContext = {
   }>;
 };
 
+// 更新前读取职位，分别处理查询失败和当前用户无权修改的情况。
+// Look up the job before updating so lookup failures and ownership failures get separate responses.
 export async function PUT(request: Request, context: RouteContext) {
   const { id } = await context.params;
   const supabase = await createClient();
@@ -45,6 +47,8 @@ export async function PUT(request: Request, context: RouteContext) {
     return NextResponse.json({ error: validation.error }, { status: 400 });
   }
 
+  // 写入时再次用发布者 ID 限制更新范围。
+  // Keep the creator ID in the update filter so the write stays scoped to the owner.
   const { error } = await supabase
     .from("jobs")
     .update({
@@ -62,6 +66,8 @@ export async function PUT(request: Request, context: RouteContext) {
   return NextResponse.json({ message: "Job updated successfully." });
 }
 
+// 确认当前用户是发布者后，按职位 ID 和发布者 ID 删除记录。
+// Verify ownership, then delete the listing by job ID and creator ID.
 export async function DELETE(_request: Request, context: RouteContext) {
   const { id } = await context.params;
   const supabase = await createClient();

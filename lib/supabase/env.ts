@@ -1,3 +1,5 @@
+// 集中读取浏览器端和服务端客户端共用的公开 Supabase 配置。
+// Read the public Supabase settings shared by the browser and server clients.
 export function getSupabaseEnv() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;

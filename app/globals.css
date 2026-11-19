@@ -1,3 +1,6 @@
+/* 共享主题色和表面颜色，供页面、卡片和交互控件使用。
+ * Shared theme and surface colors for pages, cards, and interactive controls.
+ */
 :root {
   color-scheme: light;
   --background: #f3f7f2;
@@ -329,6 +332,9 @@ textarea {
   border-color: rgba(31, 122, 77, 0.22);
 }
 
+/* 宽屏卡片在右侧为匹配分数仪表留出空间。
+ * Reserve room on the right of wide job cards for the match score gauge.
+ */
 .job-card-link {
   display: grid;
   color: inherit;
@@ -429,6 +435,9 @@ textarea {
   font-size: 0.9rem;
 }
 
+/* 窄屏时将匹配分数放回卡片内容流，避免挤压职位描述。
+ * On narrow screens, bring the match score back into the card flow to leave room for the description.
+ */
 @media (max-width: 720px) {
   .job-card-link {
     min-height: auto;

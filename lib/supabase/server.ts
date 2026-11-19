@@ -8,6 +8,8 @@ type CookieToSet = {
   options?: Parameters<Awaited<ReturnType<typeof cookies>>["set"]>[2];
 };
 
+// 使用当前请求的 Cookie 初始化服务端 Supabase 客户端。
+// Initialize the server-side Supabase client with cookies from the current request.
 export async function createClient() {
   const cookieStore = await cookies();
   const { url, anonKey } = getSupabaseEnv();
@@ -23,8 +25,8 @@ export async function createClient() {
             cookieStore.set(name, value, options);
           });
         } catch {
-          // Server Components cannot always write cookies directly.
-          // Middleware refreshes the session for normal page loads.
+          // 服务端组件可能无法写入 Cookie，由会话中间件在匹配的页面路由上刷新会话。
+          // Server Components may be unable to write cookies. Middleware refreshes sessions on matched page routes.
         }
       }
     }

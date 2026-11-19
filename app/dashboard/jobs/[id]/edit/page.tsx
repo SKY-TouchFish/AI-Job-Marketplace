@@ -16,6 +16,8 @@ export default async function EditJobPage({ params }: EditJobPageProps) {
   try {
     const job = await getJobById(id);
 
+    // 仅向职位发布者提供预填的编辑表单。
+    // Render the prefilled edit form only for the creator of the job.
     if (job.created_by !== user.id) {
       redirect(`/dashboard/jobs/${id}`);
     }

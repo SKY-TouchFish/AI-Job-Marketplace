@@ -8,6 +8,8 @@ type JobListProps = {
   currentUserId?: string;
 };
 
+// 同一列表用于公开职位页和控制面板，只有发布者会看到快捷编辑入口。
+// Share the list between the public job board and dashboard, with an edit shortcut for the creator.
 export function JobList({ jobs, currentUserId }: JobListProps) {
   if (jobs.length === 0) {
     return (

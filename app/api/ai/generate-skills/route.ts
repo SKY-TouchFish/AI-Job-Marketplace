@@ -6,6 +6,8 @@ const client = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 });
 
+// 优先解析完整响应，再尝试从附带说明的文本中提取数组。
+// Parse the full response first, then try extracting an array from surrounding text.
 function extractJsonArray(text: string) {
   const trimmed = text.trim();
 
@@ -28,6 +30,8 @@ function extractJsonArray(text: string) {
   }
 }
 
+// 为已登录用户从职位描述中提取技能，供表单预填。
+// Extract skills from a job description to prefill the form for a signed-in user.
 export async function POST(request: Request) {
   const supabase = await createClient();
   const {
@@ -70,6 +74,8 @@ export async function POST(request: Request) {
     });
     // console.log(response);
 
+    // 将数组元素统一转成字符串，并移除首尾空白及空项。
+    // Convert array entries to strings, trim whitespace, and drop empty entries.
     const skills = extractJsonArray(response.output_text)
       .map((skill) => String(skill).trim())
       .filter(Boolean);

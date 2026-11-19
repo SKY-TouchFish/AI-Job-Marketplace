@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { validateCreateJobInput } from "@/lib/jobs/validation";
 
+// 校验发布表单，并使用当前会话的用户 ID 记录发布者。
+// Validate the posting form and assign ownership using the user ID from the current session.
 export async function POST(request: Request) {
   const supabase = await createClient();
   const {

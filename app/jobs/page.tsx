@@ -3,6 +3,8 @@ import { JobList } from "@/components/jobs/job-list";
 import { getJobs } from "@/lib/jobs/queries";
 
 export default async function JobsPage() {
+  // 公开职位列表不传入个人技能，因此卡片使用默认匹配分数。
+  // The public job board supplies no profile skills, so cards use the default match score.
   const jobs = await getJobs();
 
   return (

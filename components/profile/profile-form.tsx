@@ -19,6 +19,8 @@ export function ProfileForm({ email, initialValues }: ProfileFormProps) {
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
 
+  // 提交可编辑的显示名称和技能字段，邮箱仅用于展示。
+  // Submit the editable display name and skills. The email is display-only.
   function handleSubmit(formData: FormData) {
     const payload = {
       displayName: String(formData.get("displayName") || ""),
@@ -52,6 +54,8 @@ export function ProfileForm({ email, initialValues }: ProfileFormProps) {
       }
 
       setMessage(result.message || "Profile updated successfully.");
+      // 保存后重新读取服务端提供的资料。
+      // Reload the profile data supplied by the server after saving.
       router.refresh();
     });
   }

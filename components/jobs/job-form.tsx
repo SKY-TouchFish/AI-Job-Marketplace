@@ -25,6 +25,8 @@ export function JobForm({ mode, jobId, initialValues }: JobFormProps) {
   const [message, setMessage] = useState<string | null>(null);
   const [title, setTitle] = useState(initialValues?.title || "");
   const [description, setDescription] = useState(initialValues?.description || "");
+  // 将已有技能数组转为逗号分隔的文本，方便直接编辑。
+  // Convert the existing skills array to comma-separated text for editing.
   const [requiredSkills, setRequiredSkills] = useState(
     initialValues?.requiredSkills.join(", ") || ""
   );
@@ -36,6 +38,8 @@ export function JobForm({ mode, jobId, initialValues }: JobFormProps) {
       requiredSkills
     };
 
+    // 在发起请求前，使用职位接口共用的规则校验表单。
+    // Validate the form before sending the request using the same rules as the jobs API.
     const validation = validateCreateJobInput(payload);
 
     setError(null);
@@ -72,6 +76,8 @@ export function JobForm({ mode, jobId, initialValues }: JobFormProps) {
     });
   }
 
+  // 生成结果只替换表单里的技能草稿，保存由表单提交触发。
+  // Generation only replaces the skill draft in the form. Submitting the form saves it.
   function handleGenerateSkills() {
     setError(null);
     setMessage(null);

@@ -3,6 +3,8 @@ type JobMatchFormProps = {
   defaultSkills?: string;
 };
 
+// 通过 GET 提交将筛选条件写入控制面板 URL，并用当前参数回填表单。
+// Submit filters in the dashboard URL with GET and populate the form from the current parameters.
 export function JobMatchForm({
   defaultTitle = "",
   defaultSkills = ""

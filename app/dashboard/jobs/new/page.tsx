@@ -1,6 +1,8 @@
 import { JobPostForm } from "@/components/jobs/job-post-form";
 import { requireUser } from "@/lib/auth";
 
+// 在渲染发布表单前要求用户登录。
+// Require sign-in before rendering the job posting form.
 export default async function NewJobPage() {
   await requireUser();
 

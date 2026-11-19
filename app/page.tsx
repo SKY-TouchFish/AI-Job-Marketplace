@@ -2,6 +2,8 @@ import Link from "next/link";
 import { getUser } from "@/lib/auth";
 
 export default async function HomePage() {
+  // 根据会话状态，将首页的主要入口指向控制面板或登录页。
+  // Point the main homepage link to the dashboard or login page based on the session.
   const user = await getUser();
 
   return (

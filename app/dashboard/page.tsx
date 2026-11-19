@@ -19,6 +19,8 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
   const resolvedSearchParams = searchParams ? await searchParams : undefined;
   const title = resolvedSearchParams?.title || "";
   const skills = resolvedSearchParams?.skills || "";
+  // URL 中的标题和技能用于筛选职位，个人资料中的技能用于计算匹配分数。
+  // Use the title and skills from the URL to filter jobs and the profile skills to calculate match scores.
   const jobs = await getJobs({
     title,
     skills: parseSkillSearch(skills),
