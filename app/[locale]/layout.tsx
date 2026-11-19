@@ -2,7 +2,10 @@ import {hasLocale, NextIntlClientProvider} from "next-intl";
 import {getTranslations} from "next-intl/server";
 import {notFound} from "next/navigation";
 import {routing} from "@/i18n/routing";
+import {Link} from "@/i18n/navigation";
+import {SignOutButton} from "@/components/auth/sign-out-button";
 import {LanguageSwitcher} from "@/components/language-switcher";
+import {getUser} from "@/lib/auth";
 import "../globals.css";
 
 export async function generateMetadata() {
@@ -16,12 +19,28 @@ export default async function RootLayout({children, params}: {
 }) {
   const {locale} = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
+  const [t, user] = await Promise.all([getTranslations(), getUser()]);
 
   return (
     <html lang={locale}>
       <body>
         <NextIntlClientProvider>
-          <LanguageSwitcher />
+          <header className="site-header">
+            <div className="container topbar">
+              <Link className="site-name" href="/dashboard">{t("aiJobMarketplace")}</Link>
+              <div className="topbar-actions">
+                {user ? (
+                  <SignOutButton />
+                ) : (
+                  <>
+                    <Link className="pill" href="/login">{t("logIn")}</Link>
+                    <Link className="button" href="/signup">{t("signUp")}</Link>
+                  </>
+                )}
+                <LanguageSwitcher />
+              </div>
+            </div>
+          </header>
           {children}
         </NextIntlClientProvider>
       </body>

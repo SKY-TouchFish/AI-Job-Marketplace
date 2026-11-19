@@ -1,9 +1,8 @@
 import {getTranslations} from "next-intl/server";
 import {Link} from "@/i18n/navigation";
-import { SignOutButton } from "@/components/auth/sign-out-button";
 import { JobList } from "@/components/jobs/job-list";
 import { JobMatchForm } from "@/components/jobs/job-match-form";
-import { requireUser } from "@/lib/auth";
+import { getUser } from "@/lib/auth";
 import { getJobs, parseSkillSearch } from "@/lib/jobs/queries";
 import { getProfileByUserId } from "@/lib/profile/queries";
 
@@ -16,8 +15,8 @@ type DashboardPageProps = {
 
 export default async function DashboardPage({ searchParams }: DashboardPageProps) {
   const t = await getTranslations();
-  const user = await requireUser();
-  const profile = await getProfileByUserId(user.id);
+  const user = await getUser();
+  const profile = user ? await getProfileByUserId(user.id) : null;
   const resolvedSearchParams = searchParams ? await searchParams : undefined;
   const title = resolvedSearchParams?.title || "";
   const skills = resolvedSearchParams?.skills || "";
@@ -26,27 +25,23 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
   const jobs = await getJobs({
     title,
     skills: parseSkillSearch(skills),
-    profileSkills: profile.skills
+    profileSkills: profile?.skills
   });
   const hasFilters = Boolean(title.trim() || skills.trim());
-  const displayName = profile.display_name.trim() || user.email || t("user");
+  const displayName = user
+    ? profile?.display_name.trim() || user.email || t("user")
+    : t("notLoggedIn");
 
   return (
     <main className="shell">
       <div className="container card-grid">
-        <div className="topbar">
-          <div>
-            <p className="eyebrow">{t("aiJobMarketplace")}</p>
-            <h1 style={{ margin: "8px 0 0", fontSize: "2.4rem" }}>{t("dashboard")}</h1>
-          </div>
-          <SignOutButton />
-        </div>
+        <h1 className="page-heading">{t("dashboard")}</h1>
 
         <section className="panel">
           <div className="panel-inner stack">
             <div className="stack" style={{ gap: 10 }}>
               <h2 className="profile-name">{displayName}</h2>
-              <div className="profile-meta">
+              {user && profile ? <div className="profile-meta">
                 <p className="lead">{user.email}</p>
                 <div className="skill-list">
                   {profile.skills.length > 0 ? (
@@ -59,11 +54,13 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
                     <p className="lead">{t("noSkillsAddedYet")}</p>
                   )}
                 </div>
-              </div>
+              </div> : null}
             </div>
             <div className="pill-links">
               <Link className="pill" href="/dashboard/jobs/new">{t("postAJob")}</Link>
-              <Link className="pill" href="/profile">{t("profile")}</Link>
+              {user ? (
+                <Link className="pill" href="/profile">{t("profile")}</Link>
+              ) : null}
             </div>
           </div>
         </section>
@@ -87,7 +84,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
             ) : jobs.length === 0 ? (
               <p className="helper-text">{t("noJobsPostedYetCreateThe")}</p>
             ) : (
-              <JobList jobs={jobs} currentUserId={user.id} />
+              <JobList jobs={jobs} currentUserId={user?.id} />
             )}
           </div>
         </section>

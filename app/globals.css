@@ -40,8 +40,17 @@ textarea {
 }
 
 .shell {
-  min-height: 100vh;
   padding: 32px 16px;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+body > .shell {
+  flex: 1;
 }
 
 .container {
@@ -193,12 +202,42 @@ textarea {
   color: #166534;
 }
 
+.site-header {
+  padding: 12px 16px;
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+}
+
+.site-name {
+  color: var(--accent);
+  font-weight: 700;
+}
+
 .topbar {
   display: flex;
   justify-content: space-between;
-  gap: 16px;
+  gap: 12px;
   align-items: center;
-  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.topbar-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  margin-inline-start: auto;
+}
+
+.topbar-actions .button,
+.topbar-actions .pill {
+  padding: 8px 12px;
+}
+
+.page-heading {
+  margin: 0;
+  font-size: 2.4rem;
 }
 
 .pill-links {

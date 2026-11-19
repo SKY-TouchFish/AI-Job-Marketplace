@@ -28,12 +28,7 @@ export default async function EditJobPage({ params }: EditJobPageProps) {
     return (
       <main className="shell">
         <div className="container card-grid">
-          <div className="topbar">
-            <div>
-              <p className="eyebrow">{t("aiJobMarketplace")}</p>
-              <h1 style={{ margin: "8px 0 0", fontSize: "2.4rem" }}>{t("editJob")}</h1>
-            </div>
-          </div>
+          <h1 className="page-heading">{t("editJob")}</h1>
           <JobForm
             mode="edit"
             jobId={job.id}

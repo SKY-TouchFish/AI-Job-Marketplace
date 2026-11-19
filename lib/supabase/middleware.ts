@@ -36,7 +36,8 @@ export async function updateSession(request: NextRequest, response: NextResponse
 
   const pathname = request.nextUrl.pathname.slice(locale.length + 1);
   const isAuthRoute = pathname.startsWith("/login") || pathname.startsWith("/signup");
-  const isProtectedRoute = pathname.startsWith("/dashboard") || pathname === "/profile";
+  const isProtectedRoute = pathname === "/profile"
+    || /^\/dashboard\/jobs\/(?:new\/?$|[^/]+\/edit\/?$)/.test(pathname);
 
   // 将原控制面板路径传给登录页，供登录成功后返回。
   // Pass the original dashboard path to the login page so users can return after signing in.
