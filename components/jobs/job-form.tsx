@@ -1,9 +1,10 @@
 "use client";
 
+import {useTranslations} from "next-intl";
 import { DeleteJobButton } from "@/components/jobs/delete-job-button";
 import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import {Link} from "@/i18n/navigation";
+import {useRouter} from "@/i18n/navigation";
 import { useState, useTransition } from "react";
 import { validateCreateJobInput } from "@/lib/jobs/validation";
 
@@ -18,6 +19,7 @@ type JobFormProps = {
 };
 
 export function JobForm({ mode, jobId, initialValues }: JobFormProps) {
+  const t = useTranslations();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [isGeneratingSkills, startGeneratingSkills] = useTransition();
@@ -46,7 +48,7 @@ export function JobForm({ mode, jobId, initialValues }: JobFormProps) {
     setMessage(null);
 
     if (!validation.success) {
-      setError(validation.error);
+      setError(!title.trim() ? t("titleIsRequired") : !description.trim() ? t("descriptionIsRequired") : t("atLeastOneRequiredSkillIs"));
       return;
     }
 
@@ -59,14 +61,13 @@ export function JobForm({ mode, jobId, initialValues }: JobFormProps) {
         body: JSON.stringify(payload)
       });
 
-      const result = (await response.json()) as { error?: string; message?: string };
 
       if (!response.ok) {
-        setError(result.error || `Unable to ${mode === "create" ? "create" : "update"} job.`);
+        setError(t("unableToSaveJob"));
         return;
       }
 
-      setMessage(result.message || `Job ${mode === "create" ? "posted" : "updated"} successfully.`);
+      setMessage(mode === "create" ? t("jobCreatedSuccessfully") : t("jobUpdatedSuccessfully"));
 
       if (mode === "edit" && jobId) {
         router.replace(`/dashboard/jobs/${jobId}`);
@@ -83,7 +84,7 @@ export function JobForm({ mode, jobId, initialValues }: JobFormProps) {
     setMessage(null);
 
     if (!description.trim()) {
-      setError("Add a job description before generating skills.");
+      setError(t("addAJobDescriptionBeforeGenerating"));
       return;
     }
 
@@ -99,12 +100,12 @@ export function JobForm({ mode, jobId, initialValues }: JobFormProps) {
       const result = (await response.json()) as { error?: string; skills?: string[] };
 
       if (!response.ok || !result.skills) {
-        setError(result.error || "Unable to generate skills.");
+        setError(t("unableToGenerateSkills"));
         return;
       }
 
       setRequiredSkills(result.skills.join(", "));
-      setMessage("Skills generated with AI.");
+      setMessage(t("skillsGeneratedWithAi"));
     });
   }
 
@@ -113,13 +114,13 @@ export function JobForm({ mode, jobId, initialValues }: JobFormProps) {
       <div className="panel-inner stack">
         {/* <div className="stack" style={{ gap: 8 }}>
           <h1 style={{ margin: 0, fontSize: "2.2rem" }}>
-            {mode === "create" ? "Post a new job" : "Edit job"}
+            {mode === "create" ? t("postANewJob") : t("editJob")}
           </h1>
         </div> */}
 
         <form action={handleSubmit} className="stack">
           <label className="field">
-            <span className="label">Title</span>
+            <span className="label">{t("title")}</span>
             <input
               className="input"
               type="text"
@@ -131,7 +132,7 @@ export function JobForm({ mode, jobId, initialValues }: JobFormProps) {
           </label>
 
           <label className="field">
-            <span className="label">Description</span>
+            <span className="label">{t("description")}</span>
             <textarea
               className="input input-textarea"
               name="description"
@@ -142,9 +143,7 @@ export function JobForm({ mode, jobId, initialValues }: JobFormProps) {
           </label>
 
           <div className="field">
-            <label className="label" htmlFor="requiredSkills">
-              Required skills
-            </label>
+            <label className="label" htmlFor="requiredSkills">{t("requiredSkills")}</label>
             <div className="field-toolbar">
               <button
                 className="pill ai-button"
@@ -155,7 +154,7 @@ export function JobForm({ mode, jobId, initialValues }: JobFormProps) {
                 <span className="ai-button-icon" aria-hidden="true">
                   <Image alt="" height={16} src="/openai.svg" width={16} />
                 </span>
-                {isGeneratingSkills ? "Generating..." : "Generate Skills with AI"}
+                {isGeneratingSkills ? t("generating") : t("generateSkillsWithAi")}
               </button>
             </div>
             <input
@@ -177,14 +176,14 @@ export function JobForm({ mode, jobId, initialValues }: JobFormProps) {
             <button className="button" type="submit" disabled={isPending}>
               {isPending
                 ? mode === "create"
-                  ? "Publishing..."
-                  : "Saving..."
+                  ? t("publishing")
+                  : t("saving")
                 : mode === "create"
-                  ? "Publish job"
-                  : "Save changes"}
+                  ? t("publishJob")
+                  : t("saveChanges")}
             </button>
             <Link className="pill" href={mode === "edit" && jobId ? `/dashboard/jobs/${jobId}` : "/dashboard"}>
-              {mode === "edit" ? "Back to job" : "Back to dashboard"}
+              {mode === "edit" ? t("backToJob") : t("backToDashboard")}
             </Link>
             {mode === "edit" && jobId ? <DeleteJobButton inline jobId={jobId} /> : null}
           </div>

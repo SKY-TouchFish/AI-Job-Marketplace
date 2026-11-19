@@ -1,4 +1,5 @@
-import Link from "next/link";
+import {useTranslations, useLocale} from "next-intl";
+import {Link} from "@/i18n/navigation";
 import { formatJobDate } from "@/lib/jobs/format";
 import { MatchScoreGauge } from "@/components/jobs/match-score-gauge";
 import type { JobRecord } from "@/lib/jobs/queries";
@@ -11,15 +12,15 @@ type JobListProps = {
 // 同一列表用于公开职位页和控制面板，只有发布者会看到快捷编辑入口。
 // Share the list between the public job board and dashboard, with an edit shortcut for the creator.
 export function JobList({ jobs, currentUserId }: JobListProps) {
+  const t = useTranslations();
+  const locale = useLocale();
   if (jobs.length === 0) {
     return (
       <section className="panel">
         <div className="panel-inner">
-          <p className="eyebrow">No listings yet</p>
-          <h2 style={{ margin: "8px 0 12px", fontSize: "1.8rem" }}>No jobs have been posted.</h2>
-          <p className="helper-text">
-            Once employers create job posts, they&apos;ll show up here for jobseekers to browse.
-          </p>
+          <p className="eyebrow">{t("noListingsYet")}</p>
+          <h2 style={{ margin: "8px 0 12px", fontSize: "1.8rem" }}>{t("noJobsHaveBeenPosted")}</h2>
+          <p className="helper-text">{t("onceEmployersCreateJobPostsThey")}</p>
         </div>
       </section>
     );
@@ -31,7 +32,7 @@ export function JobList({ jobs, currentUserId }: JobListProps) {
         <article className="panel job-card job-card-clickable" key={job.id}>
           {job.created_by === currentUserId ? (
             <Link
-              aria-label={`Edit ${job.title}`}
+              aria-label={t("editTitle", {title: job.title})}
               className="icon-button job-card-edit"
               href={`/dashboard/jobs/${job.id}/edit`}
             >
@@ -57,24 +58,25 @@ export function JobList({ jobs, currentUserId }: JobListProps) {
           <Link className="job-card-link panel-inner stack" href={`/dashboard/jobs/${job.id}`}>
             <div className="job-card-header">
               <div className="stack" style={{ gap: 10 }}>
-                <p className="eyebrow">Open role</p>
+                <p className="eyebrow">{t("openRole")}</p>
                 <h2 style={{ margin: 0, fontSize: "1.6rem" }}>{job.title}</h2>
-                <p className="job-meta">{formatJobDate(job.created_at)}</p>
+                <p className="job-meta">{formatJobDate(job.created_at, locale)}</p>
                 <p className="helper-text preserve-lines">{job.description}</p>
               </div>
             </div>
 
-            <div className="job-card-score">
-              <p className="job-card-score-label">Match Score</p>
-              <MatchScoreGauge value={job.match_score} />
-            </div>
-
-            <div className="skill-list">
-              {job.required_skills.map((skill) => (
-                <span className="skill-chip" key={`${job.id}-${skill}`}>
-                  {skill}
-                </span>
-              ))}
+            <div className="job-card-skills">
+              <div className="skill-list">
+                {job.required_skills.map((skill) => (
+                  <span className="skill-chip" key={`${job.id}-${skill}`}>
+                    {skill}
+                  </span>
+                ))}
+              </div>
+              <div className="job-card-score">
+                <p className="job-card-score-label">{t("matchScore")}</p>
+                <MatchScoreGauge value={job.match_score} />
+              </div>
             </div>
           </Link>
         </article>

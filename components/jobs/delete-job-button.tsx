@@ -1,6 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import {useTranslations} from "next-intl";
+import {useRouter} from "@/i18n/navigation";
 import { useState, useTransition } from "react";
 
 type DeleteJobButtonProps = {
@@ -14,6 +15,7 @@ export function DeleteJobButton({
   redirectTo = "/dashboard",
   inline = false
 }: DeleteJobButtonProps) {
+  const t = useTranslations();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
@@ -21,7 +23,7 @@ export function DeleteJobButton({
   // 先确认永久删除，接口成功后再跳转。
   // Confirm the permanent deletion and navigate only after the API succeeds.
   function handleDelete() {
-    const confirmed = window.confirm("Delete this job permanently?");
+    const confirmed = window.confirm(t("deleteThisJobPermanently"));
 
     if (!confirmed) {
       return;
@@ -34,10 +36,9 @@ export function DeleteJobButton({
         method: "DELETE"
       });
 
-      const result = (await response.json()) as { error?: string };
 
       if (!response.ok) {
-        setError(result.error || "Unable to delete job.");
+        setError(t("unableToDeleteJob"));
         return;
       }
 
@@ -50,7 +51,7 @@ export function DeleteJobButton({
     <div className={inline ? "delete-job-inline" : "delete-job-stack"}>
       {error ? <div className="notice notice-error">{error}</div> : null}
       <button className="button button-danger" onClick={handleDelete} disabled={isPending} type="button">
-        {isPending ? "Deleting..." : "Delete job"}
+        {isPending ? t("deleting") : t("deleteJob")}
       </button>
     </div>
   );

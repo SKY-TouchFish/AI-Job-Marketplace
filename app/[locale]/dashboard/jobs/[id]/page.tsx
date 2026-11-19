@@ -1,4 +1,5 @@
-import Link from "next/link";
+import {getTranslations, getLocale} from "next-intl/server";
+import {Link} from "@/i18n/navigation";
 import { notFound } from "next/navigation";
 import { DeleteJobButton } from "@/components/jobs/delete-job-button";
 import { requireUser } from "@/lib/auth";
@@ -12,6 +13,8 @@ type JobDetailPageProps = {
 };
 
 export default async function JobDetailPage({ params }: JobDetailPageProps) {
+  const t = await getTranslations();
+  const locale = await getLocale();
   const user = await requireUser();
   const { id } = await params;
 
@@ -26,8 +29,8 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
         <div className="container card-grid">
           <div className="topbar">
             <div>
-              <p className="eyebrow">AI Job Marketplace</p>
-              <h1 style={{ margin: "8px 0 0", fontSize: "2.4rem" }}>Job Details</h1>
+              <p className="eyebrow">{t("aiJobMarketplace")}</p>
+              <h1 style={{ margin: "8px 0 0", fontSize: "2.4rem" }}>{t("jobDetails")}</h1>
             </div>
           </div>
 
@@ -36,9 +39,9 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
               <div className="stack" style={{ gap: 8 }}>
                 {/* <p className="eyebrow">Job details</p> */}
                 <h1 style={{ margin: 0, fontSize: "2.2rem" }}>{job.title}</h1>
-                <p className="job-meta">{formatJobDate(job.created_at)}</p>
+                <p className="job-meta">{formatJobDate(job.created_at, locale)}</p>
                 {/* <p className="job-meta">
-                  {[job.creator_display_name, job.creator_email, formatJobDate(job.created_at)]
+                  {[job.creator_display_name, job.creator_email, formatJobDate(job.created_at, locale)]
                     .filter(Boolean)
                     .join(" • ")}
                 </p> */}
@@ -48,12 +51,12 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
               </div>
 
               <section className="detail-block stack">
-                <h2 className="section-title">Description</h2>
+                <h2 className="section-title">{t("description")}</h2>
                 <p className="helper-text preserve-lines">{job.description}</p>
               </section>
 
               <section className="detail-block stack">
-                <h2 className="section-title">Required skills</h2>
+                <h2 className="section-title">{t("requiredSkills")}</h2>
                 <div className="skill-list">
                   {job.required_skills.map((skill) => (
                     <span className="skill-chip" key={`${job.id}-${skill}`}>
@@ -65,13 +68,9 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
 
               <div className="inline-actions">
                 {isCreator ? (
-                  <Link className="button" href={`/dashboard/jobs/${job.id}/edit`}>
-                    Edit job
-                  </Link>
+                  <Link className="button" href={`/dashboard/jobs/${job.id}/edit`}>{t("editJob")}</Link>
                 ) : null}
-                <Link className="pill" href="/dashboard">
-                  Back to dashboard
-                </Link>
+                <Link className="pill" href="/dashboard">{t("backToDashboard")}</Link>
                 {isCreator ? <DeleteJobButton inline jobId={job.id} /> : null}
               </div>
             </div>

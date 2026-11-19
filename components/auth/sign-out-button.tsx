@@ -1,10 +1,12 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import {useTranslations} from "next-intl";
+import {useRouter} from "@/i18n/navigation";
 import { useTransition } from "react";
 import { createClient } from "@/lib/supabase/client";
 
 export function SignOutButton() {
+  const t = useTranslations();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -21,7 +23,7 @@ export function SignOutButton() {
 
   return (
     <button className="button" onClick={handleSignOut} disabled={isPending}>
-      {isPending ? "Signing out..." : "Sign out"}
+      {isPending ? t("signingOut") : t("signOut")}
     </button>
   );
 }

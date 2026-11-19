@@ -1,7 +1,9 @@
 "use client";
 
-import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import {useTranslations, useLocale} from "next-intl";
+import {Link} from "@/i18n/navigation";
+import {useRouter} from "@/i18n/navigation";
+import { useSearchParams } from "next/navigation";
 import { useMemo, useState, useTransition } from "react";
 import { createClient } from "@/lib/supabase/client";
 
@@ -12,6 +14,8 @@ type AuthFormProps = {
 };
 
 export function AuthForm({ mode }: AuthFormProps) {
+  const t = useTranslations();
+  const locale = useLocale();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
@@ -20,7 +24,10 @@ export function AuthForm({ mode }: AuthFormProps) {
   // 读取登录后的返回地址，默认进入控制面板。
   // Read the post-login destination, defaulting to the dashboard.
   const redirectTo = useMemo(
-    () => searchParams.get("redirectTo") || "/dashboard",
+    () => {
+      const path = searchParams.get("redirectTo") || "";
+      return /^\/(?:dashboard|profile)(?:[/?]|$)/.test(path) && !path.includes("\\") ? path : "/dashboard";
+    },
     [searchParams]
   );
 
@@ -42,13 +49,13 @@ export function AuthForm({ mode }: AuthFormProps) {
               options: {
                 emailRedirectTo:
                   typeof window !== "undefined"
-                    ? `${window.location.origin}/dashboard`
+                    ? `${window.location.origin}/${locale}/dashboard`
                     : undefined
               }
             });
 
       if (result.error) {
-        setError(result.error.message);
+        setError(result.error.code === "invalid_credentials" ? t("invalidEmailOrPassword") : result.error.code === "email_not_confirmed" ? t("pleaseConfirmYourEmail") : t("authenticationFailed"));
         return;
       }
 
@@ -60,14 +67,14 @@ export function AuthForm({ mode }: AuthFormProps) {
         Array.isArray(result.data.user.identities) &&
         result.data.user.identities.length === 0
       ) {
-        setError("An account with this email already exists. Please log in instead.");
+        setError(t("anAccountWithThisEmailAlready"));
         return;
       }
 
       // 注册成功但尚未建立会话时，提示用户通过邮件确认。
       // Prompt for email confirmation when sign-up succeeds without creating a session.
       if (mode === "signup" && !result.data.session) {
-        setMessage("Account created. Check your email to confirm the signup.");
+        setMessage(t("accountCreatedCheckYourEmailTo"));
         router.refresh();
         return;
       }
@@ -82,20 +89,20 @@ export function AuthForm({ mode }: AuthFormProps) {
       <div className="panel-inner">
         <div className="stack">
           <div>
-            <p className="eyebrow">{mode === "login" ? "Welcome back" : "Create account"}</p>
+            <p className="eyebrow">{mode === "login" ? t("welcomeBack") : t("createAccount")}</p>
             <h1 style={{ margin: "8px 0 0", fontSize: "2rem" }}>
-              {mode === "login" ? "Log in to continue" : "Sign up in minutes"}
+              {mode === "login" ? t("logInToContinue") : t("signUpInMinutes")}
             </h1>
           </div>
 
           <form action={handleSubmit} className="stack">
             <label className="field">
-              <span className="label">Email</span>
+              <span className="label">{t("email")}</span>
               <input className="input" type="email" name="email" required autoComplete="email" />
             </label>
 
             <label className="field">
-              <span className="label">Password</span>
+              <span className="label">{t("password")}</span>
               <input
                 className="input"
                 type="password"
@@ -112,21 +119,21 @@ export function AuthForm({ mode }: AuthFormProps) {
             <button className="button" type="submit" disabled={isPending}>
               {isPending
                 ? mode === "login"
-                  ? "Logging in..."
-                  : "Creating account..."
+                  ? t("loggingIn")
+                  : t("creatingAccount")
                 : mode === "login"
-                  ? "Log in"
-                  : "Create account"}
+                  ? t("logIn")
+                  : t("createAccount")}
             </button>
           </form>
 
           <p style={{ margin: 0, color: "var(--muted)" }}>
-            {mode === "login" ? "Need an account?" : "Already registered?"}{" "}
+            {mode === "login" ? t("needAnAccount") : t("alreadyRegistered")}{" "}
             <Link
               className="subtle-link"
               href={mode === "login" ? "/signup" : "/login"}
             >
-              {mode === "login" ? "Sign up" : "Log in"}
+              {mode === "login" ? t("signUp") : t("logIn")}
             </Link>
           </p>
         </div>

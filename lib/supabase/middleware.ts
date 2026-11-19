@@ -8,8 +8,7 @@ type CookieToSet = {
   options?: Parameters<NextResponse["cookies"]["set"]>[2];
 };
 
-export async function updateSession(request: NextRequest) {
-  const response = NextResponse.next({ request });
+export async function updateSession(request: NextRequest, response: NextResponse, locale: string) {
   const { url, anonKey } = getSupabaseEnv();
 
   const supabase = createServerClient(url, anonKey, {
@@ -24,6 +23,9 @@ export async function updateSession(request: NextRequest) {
           request.cookies.set(name, value);
           response.cookies.set(name, value, options);
         });
+        response.headers.set("x-middleware-request-cookie", request.headers.get("cookie") || "");
+        const overrides = response.headers.get("x-middleware-override-headers")?.split(",") || [];
+        response.headers.set("x-middleware-override-headers", [...new Set([...overrides, "cookie"])].join(","));
       }
     }
   });
@@ -32,24 +34,29 @@ export async function updateSession(request: NextRequest) {
     data: { user }
   } = await supabase.auth.getUser();
 
-  const pathname = request.nextUrl.pathname;
+  const pathname = request.nextUrl.pathname.slice(locale.length + 1);
   const isAuthRoute = pathname.startsWith("/login") || pathname.startsWith("/signup");
-  const isProtectedRoute = pathname.startsWith("/dashboard");
+  const isProtectedRoute = pathname.startsWith("/dashboard") || pathname === "/profile";
 
   // 将原控制面板路径传给登录页，供登录成功后返回。
   // Pass the original dashboard path to the login page so users can return after signing in.
   if (isProtectedRoute && !user) {
     const redirectUrl = request.nextUrl.clone();
-    redirectUrl.pathname = "/login";
-    redirectUrl.searchParams.set("redirectTo", pathname);
-    return NextResponse.redirect(redirectUrl);
+    redirectUrl.pathname = `/${locale}/login`;
+    redirectUrl.search = "";
+    redirectUrl.searchParams.set("redirectTo", pathname + request.nextUrl.search);
+    const redirect = NextResponse.redirect(redirectUrl);
+    for (const cookie of response.cookies.getAll()) redirect.cookies.set(cookie);
+    return redirect;
   }
 
   if (isAuthRoute && user) {
     const redirectUrl = request.nextUrl.clone();
-    redirectUrl.pathname = "/dashboard";
+    redirectUrl.pathname = `/${locale}/dashboard`;
     redirectUrl.search = "";
-    return NextResponse.redirect(redirectUrl);
+    const redirect = NextResponse.redirect(redirectUrl);
+    for (const cookie of response.cookies.getAll()) redirect.cookies.set(cookie);
+    return redirect;
   }
 
   return response;

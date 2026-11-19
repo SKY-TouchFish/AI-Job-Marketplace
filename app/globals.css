@@ -332,15 +332,12 @@ textarea {
   border-color: rgba(31, 122, 77, 0.22);
 }
 
-/* 宽屏卡片在右侧为匹配分数仪表留出空间。
- * Reserve room on the right of wide job cards for the match score gauge.
+/* 匹配分数与技能列表同行，职位描述使用卡片完整宽度。
+ * Keep the match score beside the skills while the description uses the full card width.
  */
 .job-card-link {
   display: grid;
   color: inherit;
-  position: relative;
-  min-height: 220px;
-  padding-right: 220px;
 }
 
 .job-card-header {
@@ -350,11 +347,14 @@ textarea {
   grid-template-columns: minmax(0, 1fr);
 }
 
+.job-card-skills {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 20px;
+}
+
 .job-card-score {
-  position: absolute;
-  top: 50%;
-  right: 28px;
-  transform: translateY(-50%);
   display: grid;
   gap: 8px;
   justify-items: center;
@@ -435,18 +435,20 @@ textarea {
   font-size: 0.9rem;
 }
 
-/* 窄屏时将匹配分数放回卡片内容流，避免挤压职位描述。
- * On narrow screens, bring the match score back into the card flow to leave room for the description.
+/* 窄屏缩小仪表，为同一行的技能标签留出空间。
+ * Use a smaller gauge on narrow screens to leave room for skill chips in the same row.
  */
 @media (max-width: 720px) {
-  .job-card-link {
-    min-height: auto;
-    padding-right: 28px;
+  .job-card-skills {
+    gap: 12px;
   }
 
   .job-card-score {
-    position: static;
-    transform: none;
-    justify-items: center;
+    width: 120px;
+  }
+
+  .job-card-score .match-gauge {
+    width: 120px;
+    height: 100px;
   }
 }

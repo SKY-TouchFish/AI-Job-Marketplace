@@ -1,7 +1,8 @@
 "use client";
 
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import {useTranslations} from "next-intl";
+import {Link} from "@/i18n/navigation";
+import {useRouter} from "@/i18n/navigation";
 import { useState, useTransition } from "react";
 import { validateProfileInput } from "@/lib/profile/validation";
 
@@ -14,6 +15,7 @@ type ProfileFormProps = {
 };
 
 export function ProfileForm({ email, initialValues }: ProfileFormProps) {
+  const t = useTranslations();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
@@ -33,7 +35,7 @@ export function ProfileForm({ email, initialValues }: ProfileFormProps) {
     setMessage(null);
 
     if (!validation.success) {
-      setError(validation.error);
+      setError(t("displayNameIsRequired"));
       return;
     }
 
@@ -46,14 +48,13 @@ export function ProfileForm({ email, initialValues }: ProfileFormProps) {
         body: JSON.stringify(payload)
       });
 
-      const result = (await response.json()) as { error?: string; message?: string };
 
       if (!response.ok) {
-        setError(result.error || "Unable to update profile.");
+        setError(t("unableToUpdateProfile"));
         return;
       }
 
-      setMessage(result.message || "Profile updated successfully.");
+      setMessage(t("profileUpdatedSuccessfully"));
       // 保存后重新读取服务端提供的资料。
       // Reload the profile data supplied by the server after saving.
       router.refresh();
@@ -64,12 +65,12 @@ export function ProfileForm({ email, initialValues }: ProfileFormProps) {
     <section className="panel">
       <div className="panel-inner stack">
         <div className="stack" style={{ gap: 8 }}>
-          <h1 style={{ margin: 0, fontSize: "2.2rem" }}>Profile settings</h1>
+          <h1 style={{ margin: 0, fontSize: "2.2rem" }}>{t("profileSettings")}</h1>
         </div>
 
         <form action={handleSubmit} className="stack">
           <label className="field">
-            <span className="label">Display name</span>
+            <span className="label">{t("displayName")}</span>
             <input
               className="input"
               type="text"
@@ -80,12 +81,12 @@ export function ProfileForm({ email, initialValues }: ProfileFormProps) {
           </label>
 
           <label className="field">
-            <span className="label">Email address</span>
+            <span className="label">{t("emailAddress")}</span>
             <input className="input" type="email" value={email} readOnly disabled />
           </label>
 
           <label className="field">
-            <span className="label">Skills</span>
+            <span className="label">{t("skills")}</span>
             <input
               className="input"
               type="text"
@@ -100,11 +101,9 @@ export function ProfileForm({ email, initialValues }: ProfileFormProps) {
 
           <div className="inline-actions">
             <button className="button" type="submit" disabled={isPending}>
-              {isPending ? "Saving..." : "Save profile"}
+              {isPending ? t("saving") : t("saveProfile")}
             </button>
-            <Link className="pill" href="/dashboard">
-              Back to dashboard
-            </Link>
+            <Link className="pill" href="/dashboard">{t("backToDashboard")}</Link>
           </div>
         </form>
       </div>

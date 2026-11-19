@@ -1,3 +1,4 @@
+import {getTranslations, getLocale} from "next-intl/server";
 import { notFound, redirect } from "next/navigation";
 import { JobForm } from "@/components/jobs/job-form";
 import { requireUser } from "@/lib/auth";
@@ -10,6 +11,8 @@ type EditJobPageProps = {
 };
 
 export default async function EditJobPage({ params }: EditJobPageProps) {
+  const t = await getTranslations();
+  const locale = await getLocale();
   const user = await requireUser();
   const { id } = await params;
 
@@ -19,7 +22,7 @@ export default async function EditJobPage({ params }: EditJobPageProps) {
     // 仅向职位发布者提供预填的编辑表单。
     // Render the prefilled edit form only for the creator of the job.
     if (job.created_by !== user.id) {
-      redirect(`/dashboard/jobs/${id}`);
+      redirect(`/${locale}/dashboard/jobs/${id}`);
     }
 
     return (
@@ -27,8 +30,8 @@ export default async function EditJobPage({ params }: EditJobPageProps) {
         <div className="container card-grid">
           <div className="topbar">
             <div>
-              <p className="eyebrow">AI Job Marketplace</p>
-              <h1 style={{ margin: "8px 0 0", fontSize: "2.4rem" }}>Edit Job</h1>
+              <p className="eyebrow">{t("aiJobMarketplace")}</p>
+              <h1 style={{ margin: "8px 0 0", fontSize: "2.4rem" }}>{t("editJob")}</h1>
             </div>
           </div>
           <JobForm

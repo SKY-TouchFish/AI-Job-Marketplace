@@ -1,3 +1,4 @@
+import {useTranslations, useLocale} from "next-intl";
 type JobMatchFormProps = {
   defaultTitle?: string;
   defaultSkills?: string;
@@ -9,22 +10,24 @@ export function JobMatchForm({
   defaultTitle = "",
   defaultSkills = ""
 }: JobMatchFormProps) {
+  const t = useTranslations();
+  const locale = useLocale();
   return (
-    <form action="/dashboard" className="stack">
+    <form action={`/${locale}/dashboard`} className="stack">
       <div className="match-grid">
         <label className="field">
-          <span className="label">Job title</span>
+          <span className="label">{t("jobTitle")}</span>
           <input
             className="input"
             type="text"
             name="title"
             defaultValue={defaultTitle}
-            placeholder="Frontend Engineer"
+            placeholder={t("frontendEngineer")}
           />
         </label>
 
         <label className="field">
-          <span className="label">Job skills</span>
+          <span className="label">{t("jobSkills")}</span>
           <input
             className="input"
             type="text"
@@ -36,12 +39,8 @@ export function JobMatchForm({
       </div>
 
       <div className="inline-actions">
-        <button className="button" type="submit">
-          Find matches
-        </button>
-        <a className="pill" href="/dashboard">
-          Reset
-        </a>
+        <button className="button" type="submit">{t("findMatches")}</button>
+        <a className="pill" href={`/${locale}/dashboard`}>{t("reset")}</a>
       </div>
     </form>
   );
