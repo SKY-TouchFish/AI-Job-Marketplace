@@ -209,8 +209,16 @@ body > .shell {
 }
 
 .site-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
   color: var(--accent);
   font-weight: 700;
+}
+
+.site-logo {
+  display: block;
+  flex-shrink: 0;
 }
 
 .topbar {

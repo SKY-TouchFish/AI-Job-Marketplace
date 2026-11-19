@@ -1,6 +1,7 @@
 import {hasLocale, NextIntlClientProvider} from "next-intl";
 import {getTranslations} from "next-intl/server";
 import {notFound} from "next/navigation";
+import Image from "next/image";
 import {routing} from "@/i18n/routing";
 import {Link} from "@/i18n/navigation";
 import {SignOutButton} from "@/components/auth/sign-out-button";
@@ -10,7 +11,11 @@ import "../globals.css";
 
 export async function generateMetadata() {
   const t = await getTranslations();
-  return {title: t("aiJobMarketplace"), description: t("aSimpleAiJobMarketplaceFor")};
+  return {
+    title: t("aiJobMarketplace"),
+    description: t("aSimpleAiJobMarketplaceFor"),
+    icons: {icon: {url: "/logo.svg", type: "image/svg+xml", sizes: "any"}},
+  };
 }
 
 export default async function RootLayout({children, params}: {
@@ -27,7 +32,10 @@ export default async function RootLayout({children, params}: {
         <NextIntlClientProvider>
           <header className="site-header">
             <div className="container topbar">
-              <Link className="site-name" href="/dashboard">{t("aiJobMarketplace")}</Link>
+              <Link className="site-name" href="/dashboard">
+                <Image className="site-logo" src="/logo.svg" alt="" width={36} height={36} />
+                <span>{t("aiJobMarketplace")}</span>
+              </Link>
               <div className="topbar-actions">
                 {user ? (
                   <SignOutButton />
